@@ -28,16 +28,17 @@ def loginlayout():
     loginframe = Frame(root,bg='pink')
     loginframe.rowconfigure((0,1,2,3),weight=1)
     loginframe.columnconfigure((0,1),weight=1)
-    #Label(loginframe, image=img1, bg='pink').grid(row=0,columnspan=2)
     Label(loginframe, text="Username ", bg='pink', fg='black', padx=10).grid(row=1,column=0,sticky='e')
     userentry = Entry(loginframe, bg='#FFA07A', fg='black', width=20, textvariable=userinfo)
     userentry.grid(row=1,column=1,sticky='w',padx=20)
     Label(loginframe, text="Password ", bg='pink', fg='black', padx=20).grid(row=2,column=0,sticky='e')
     pwdentry = Entry(loginframe, bg='#FFA07A', fg='black', width=20, textvariable=pwdinfo, show='*')
     pwdentry.grid(row=2,column=1,sticky='w',padx=20)
-    Button(loginframe, text="Login", compound=RIGHT, width=10).grid(row=3, column=1, padx=20, pady=20, ipady=15, sticky=E)
+    Button(loginframe, text="Login", compound=RIGHT, width=10, command=loginclick).grid(row=3, column=1, padx=20, pady=20, ipady=15, sticky=E)
     Button(loginframe, text="Register",  compound=LEFT, width=10, command=regislayout).grid(row=3, column=1, padx=20, pady=20, ipady=15, sticky=W)
     loginframe.grid(row=1, column=1, columnspan=2, rowspan=2, sticky='NEWS')
+
+    
     
 def regislayout():
 
@@ -80,6 +81,31 @@ def regislayout():
 
     Button(regis_frm, text="Complete",  compound=LEFT, width=200,command=registration).grid(row=7, columnspan=2, padx=20, pady=20, ipady=15, sticky=E)
 
+def loginclick():
+    global result
+    
+
+    if userinfo.get() == "": 
+        messagebox.showwarning("Admin","Enter username first.")
+        userentry.focus_force()
+    
+    else:
+        if pwdinfo.get() == "":
+            messagebox.showwarning("Admin","Enter password first.")
+            pwdentry.focus_force()
+        else :
+            sql = "SELECT* From userinfo WHERE user=? AND pwd=? " 
+            cursor.execute(sql,[userinfo.get(),pwdinfo.get()]) 
+            result = cursor.fetchall()
+             
+            if result : 
+                messagebox.showinfo("Admin","Login succesfully")
+                main() 
+            else :
+                
+                messagebox.showwarning("Admin","Incorrect Username or password")
+
+
 def registration() :
     if fname.get() == "":
         messagebox.showwarning("Admin",'Please enter fristname')
@@ -99,6 +125,17 @@ def registration() :
     elif cfpwd.get()== "":
         messagebox.showwarning("Admin",'Please enter confirm password')
         cfpwd.focus_force()
+
+def main():
+    global profile_frm
+    global result
+    root.title("Profile")
+    profile_frm = Frame(root,bg='#D8BFD8') 
+    profile_frm.columnconfigure((0,1),weight=1)
+    profile_frm.rowconfigure((0,1,2,3,4,5),weight=1)
+    profile_frm.place(x=0,y=0,width=w,height=h)
+
+
 
 
 w = 1000
